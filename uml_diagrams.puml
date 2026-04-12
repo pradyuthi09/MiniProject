@@ -1,0 +1,191 @@
+@startuml SystemArchitecture
+skinparam componentStyle rectangle
+skinparam roundcorner 10
+skinparam padding 5
+skinparam defaultFontName Arial
+skinparam nodeBackgroundColor #f8f9fa
+skinparam componentBackgroundColor #ffffff
+
+node "Client Environment" {
+    component "Frontend UI (HTML/CSS)" as UI
+    component "JavaScript Logic (App.js)" as JS
+}
+
+node "Backend Architecture (Flask)" {
+    component "Profile Management API" as ProfAPI
+    component "Generative AI API" as AI_API
+    component "Welfare Schemes API" as SchAPI
+    component "Skill Directory API" as WrkAPI
+}
+
+node "Data Management Layer" {
+    file "schemes_db.json" as SchJson
+    file "workers_db.json" as WrkJson
+    collections "In-Memory Profile Store" as ProfDB
+}
+
+node "Third-Party Integrations" {
+    component "Google Gemini API" as Gemini
+    component "Firebase Authentication" as FirebaseAuth
+}
+
+UI <--> JS
+JS <--> ProfAPI : REST/JSON
+JS <--> AI_API : REST/JSON
+JS <--> SchAPI : REST/JSON
+JS <--> WrkAPI : REST/JSON
+JS <--> FirebaseAuth : Auth Tokens
+
+ProfAPI ..> ProfDB
+SchAPI ..> SchJson
+WrkAPI ..> WrkJson
+AI_API ..> Gemini
+@enduml
+
+
+@startuml UseCaseDiagram
+left to right direction
+
+actor "Rural Woman" as User
+actor "Firebase Auth" as Auth
+actor "Sakhi AI" as AI
+
+rectangle "ShaktiPath Platform" {
+    usecase "Login via Google" as UC1
+    usecase "Manage User Profile" as UC2
+    usecase "Chat with AI Assistant" as UC3
+    usecase "Generate Career Opportunities" as UC4
+    usecase "Browse Government Schemes" as UC5
+    usecase "Register Personal Skills" as UC6
+    usecase "Search Skill Directory" as UC7
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+
+UC1 --> Auth : Authenticates
+UC3 --> AI : Processes Input
+UC4 --> AI : Generates
+@enduml
+
+
+@startuml ClassDiagram
+class UserProfile {
+    - mobile: String
+    - name: String
+    - city: String
+    - age: Integer
+    + saveProfile(): boolean
+    + loadProfile(): UserProfile
+}
+
+class Scheme {
+    - name: String
+    - category: String
+    - state: String
+    - description: String
+    - time: String
+    - benefits: String
+    - eligibility: String
+    - documents: List
+    - steps: List
+    + filterByStateAndCategory()
+}
+
+class SkillWorker {
+    - id: String
+    - name: String
+    - skills: List
+    - income: String
+    - description: String
+    - state: String
+    - city: String
+    - avail: String
+    - contact: String
+    - avatar: String
+    + registerSkill(): boolean
+    + getWorkersByFilter(): List
+}
+
+class AIAssistant {
+    - chatHistory: List
+    - isListening: boolean
+    - autoSpeak: boolean
+    + askAI(prompt: String): String
+    + speakText(text: String)
+    + toggleVoice()
+}
+
+class WebAppController {
+    - currentProfileName: String
+    - currentSchemeTab: String
+    + showPage(id: String)
+    + toggleTheme()
+    + loadSchemesData()
+    + loadDirectory()
+}
+
+WebAppController --> UserProfile : Manages
+WebAppController --> Scheme : Views
+WebAppController --> SkillWorker : Views
+WebAppController --> AIAssistant : Interacts
+@enduml
+
+
+@startuml SequenceDiagram
+actor User
+participant "App.js" as Frontend
+participant "Flask Server" as Backend
+participant "Gemini API" as Gemini
+
+User -> Frontend : Click "Send" Message
+activate Frontend
+
+Frontend -> Backend : POST /api/chat {messages}
+activate Backend
+
+Backend -> Gemini : generateContent()
+activate Gemini
+Gemini --> Backend : JSON Answer
+deactivate Gemini
+
+Backend --> Frontend : JSON Answer
+deactivate Backend
+
+Frontend -> Frontend : Append AI Message to UI
+Frontend -> User : Display Answer
+deactivate Frontend
+@enduml
+
+
+@startuml ActivityDiagram
+start
+:User clicks "Register Skills";
+:Display Registration Form;
+
+repeat
+  :User fills in details;
+  :User selects skills;
+  :User clicks Submit;
+  
+  if (Required fields empty?) then (Yes)
+    :Show Error Message;
+  else (No)
+    :POST /api/workers;
+    if (Success?) then (Yes)
+       :Show Success Message;
+       :Redirect to Skill Directory;
+       break
+    else (No)
+       :Show Error Message;
+    endif
+  endif
+repeat while (Form is invalid)
+
+stop
+@enduml

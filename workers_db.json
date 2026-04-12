@@ -1,0 +1,187 @@
+[
+  {
+    "name": "Anu",
+    "skills": [
+      "Cooking"
+    ],
+    "income": "\u20b92000-\u20b930000/mo",
+    "desc": "I am a specilist in SouthIndian",
+    "state": "Telangana",
+    "city": "Sheriguda",
+    "exact_address": "CVR College Of Engineering, Hyderabad - Nagarjuna Sagar Road, Sheriguda, Ibrahimpatnam mandal, Ranga Reddy, Telangana, 501510, India",
+    "avail": "Part-time (Morning)",
+    "exp": "New",
+    "contact": "anu@gmail.com",
+    "photo_url": "/static/uploads/photo_69b36729.jpeg",
+    "video_url": "/static/uploads/video_f98f2a9a.mp4",
+    "id": "w_159b61b1",
+    "rating": "New",
+    "avatar": "A"
+  },
+  {
+    "name": "ponnu",
+    "skills": [
+      "Tailoring"
+    ],
+    "income": "\u20b92000-\u20b920000/mo",
+    "desc": "",
+    "state": "Telangana",
+    "city": "Sheriguda",
+    "avail": "Full-time",
+    "exp": "New",
+    "contact": "ponnu@123",
+    "id": "w_31890ca6",
+    "rating": "New",
+    "avatar": "P"
+  },
+  {
+    "name": "butter chran",
+    "skills": [
+      "Cooking",
+      "Agriculture"
+    ],
+    "income": "\u20b940000-\u20b920000000/mo",
+    "desc": "",
+    "state": "Maharashtra",
+    "city": "guntur",
+    "avail": "Full-time",
+    "exp": "New",
+    "contact": "charan5.7@gmail.com",
+    "id": "w_f50e53e0",
+    "rating": "New",
+    "avatar": "B"
+  },
+  {
+    "name": "bbhbhbhbhb",
+    "skills": [
+      "Weaving"
+    ],
+    "income": "\u20b92323232-\u20b93232323/mo",
+    "desc": "22332ass",
+    "state": "Telangana",
+    "city": "mumbai",
+    "avail": "Full-time",
+    "exp": "New",
+    "contact": "samiabdus9831@gmail.com",
+    "id": "w_48398f2a",
+    "rating": "New",
+    "avatar": "B"
+  },
+  {
+    "name": "sam",
+    "skills": [
+      "Weaving"
+    ],
+    "income": "\u20b92323232-\u20b93232323/mo",
+    "desc": "22332ass",
+    "state": "Telangana",
+    "city": "Hyderabad",
+    "avail": "Full-time",
+    "exp": "New",
+    "contact": "samiabdus9831@gmail.com",
+    "id": "w_46ef0d42",
+    "rating": "New",
+    "avatar": "S"
+  },
+  {
+    "name": "sssss",
+    "skills": [
+      "Tailoring"
+    ],
+    "income": "\u20b950000-\u20b9200000/mo",
+    "desc": "tailor",
+    "state": "Telangana",
+    "city": "Hyderabad",
+    "avail": "Full-time",
+    "exp": "New",
+    "contact": "Contact via Inbox",
+    "id": "w_a3241766",
+    "rating": "New",
+    "avatar": "S"
+  },
+  {
+    "name": "VARDHA",
+    "skills": [
+      "Cooking",
+      "Tailoring"
+    ],
+    "income": "\u20b95000-\u20b9199998/mo",
+    "desc": "",
+    "state": "Telangana",
+    "city": "Hyderabad",
+    "avail": "Part-time (Morning)",
+    "exp": "New",
+    "contact": "Contact via Inbox",
+    "id": "w_a0158c11",
+    "rating": "New",
+    "avatar": "V"
+  },
+  {
+    "name": "Registered Worker",
+    "skills": [
+      "Cooking",
+      "Embroidery"
+    ],
+    "income": "\u20b9500-\u20b920000/mo",
+    "desc": "emrerifnddfnsadnfsda",
+    "state": "Telangana",
+    "city": "Hyderabad",
+    "avail": "Full-time",
+    "exp": "New",
+    "contact": "Contact via Inbox",
+    "id": "w_036d1678",
+    "rating": "New",
+    "avatar": "R"
+  },
+  {
+    "id": "w1",
+    "avatar": "A",
+    "name": "Ananya Reddy",
+    "state": "Telangana",
+    "city": "Hyderabad",
+    "avail": "Full-time",
+    "skills": [
+      "Tailoring",
+      "Embroidery"
+    ],
+    "desc": "Bridal blouses and designer sarees. NIFT trained. 5 years experience.",
+    "income": "\u20b98,000-\u20b912,000/mo",
+    "exp": "5yr exp",
+    "contact": "ananya.r@gmail.com",
+    "rating": "4.9"
+  },
+  {
+    "id": "w2",
+    "avatar": "M",
+    "name": "Meena Kumari",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "avail": "Part-time (Morning)",
+    "skills": [
+      "Cooking",
+      "Catering"
+    ],
+    "desc": "South Indian tiffin and catering. Daily delivery to offices.",
+    "income": "\u20b96,000-\u20b99,000/mo",
+    "exp": "3yr exp",
+    "contact": "meena.k@yahoo.com",
+    "rating": "4.7"
+  },
+  {
+    "id": "w3",
+    "avatar": "S",
+    "name": "Sunita Sharma",
+    "state": "Rajasthan",
+    "city": "Jaipur",
+    "avail": "Flexible",
+    "skills": [
+      "Handicrafts",
+      "Weaving"
+    ],
+    "desc": "Block printing and Rajasthani textile art. Export quality work.",
+    "income": "\u20b99,000-\u20b914,000/mo",
+    "exp": "8yr exp",
+    "contact": "sunita.s@gmail.com",
+    "rating": "5.0"
+  }
+]
