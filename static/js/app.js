@@ -403,7 +403,22 @@ function toggleVoice() {
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
-  recognition.lang = 'hi-IN'; // Hindi — change to 'te-IN' for Telugu
+  
+  // Detect current language from Google Translate Cookie
+  let currentLang = 'en-IN'; // Default to English 
+  const match = document.cookie.match(/googtrans=\/[a-z]{2}\/([a-z]{2})/);
+  if (match && match[1]) {
+    const gl = match[1];
+    if (gl === 'hi') currentLang = 'hi-IN';
+    else if (gl === 'te') currentLang = 'te-IN';
+    else if (gl === 'ta') currentLang = 'ta-IN';
+    else if (gl === 'mr') currentLang = 'mr-IN';
+    else if (gl === 'bn') currentLang = 'bn-IN';
+    else if (gl === 'en') currentLang = 'en-IN';
+    else currentLang = gl + '-' + gl.toUpperCase();
+  }
+
+  recognition.lang = currentLang;
   recognition.continuous = false;
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
@@ -411,7 +426,7 @@ function toggleVoice() {
   recognition.onstart = () => {
     isListening = true;
     document.getElementById('voiceBtn').classList.add('listening');
-    showToast('🎤 Listening... Please speak now (Hindi/English)');
+    showToast(`🎤 Listening... Please speak now (${currentLang.slice(0,2).toUpperCase()})`);
   };
 
   recognition.onresult = (event) => {

@@ -101,13 +101,21 @@
         const nav = document.getElementById('nav');
         if(!btn) return;
         if(user) {
-            let displayName = user.displayName ? user.displayName.split(' ')[0] : 'User';
+            let extractedName = user.email ? user.email.split('@')[0] : 'User';
+            extractedName = extractedName.charAt(0).toUpperCase() + extractedName.slice(1);
+            let displayName = user.displayName ? user.displayName.split(' ')[0] : extractedName;
+            
             btn.innerHTML = `👤 ${displayName} <span style="font-size:10px">(Logout)</span>`;
             btn.onclick = () => {
                 signOut(auth).then(() => window.location.reload());
             };
-            window.currentProfileName = user.displayName;
+            window.currentProfileName = user.displayName || displayName;
             window.currentProfileEmail = user.email;
+            
+            // Update profile section dynamically if the function is ready
+            if(typeof loadProfile === 'function') {
+                loadProfile();
+            }
             
             // Show navigation options
             if(nav) nav.style.display = 'flex';
