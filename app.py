@@ -76,7 +76,7 @@ def chat():
             }
         }
         
-        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
         response = requests.post(api_url, headers={'Content-Type': 'application/json'}, json=payload, timeout=30)
         
         if response.status_code != 200:
@@ -162,7 +162,7 @@ def get_opportunities():
             }
         }
         
-        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
         response = requests.post(api_url, headers={'Content-Type': 'application/json'}, json=payload, timeout=30)
         
         if response.status_code != 200:
