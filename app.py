@@ -6,6 +6,8 @@ from pymongo import MongoClient
 import requests
 import uuid
 import datetime
+import time
+import random
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -20,6 +22,41 @@ logger = logging.getLogger(__name__)
 # Constants
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+
+def send_gemini_request(url, json_payload, timeout=30, max_retries=8):
+    backoff_base = 2
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.post(url, headers={'Content-Type': 'application/json'}, json=json_payload, timeout=timeout)
+        except requests.RequestException as e:
+            logger.warning(f"Gemini request exception on attempt {attempt}: {e}")
+            resp = None
+
+        if resp is not None and resp.status_code == 200:
+            return resp
+
+        # If rate limited, respect Retry-After if present. Log headers for debugging.
+        retry_after = None
+        if resp is not None:
+            logger.info(f"Gemini response headers: {resp.headers}")
+            retry_after = resp.headers.get('Retry-After')
+
+        if attempt == max_retries:
+            return resp
+
+        sleep_for = backoff_base * (2 ** (attempt - 1))
+        if retry_after:
+            try:
+                sleep_for = max(sleep_for, int(retry_after))
+            except Exception:
+                pass
+
+        # add some jitter
+        sleep_for = sleep_for + random.uniform(0, 1)
+        logger.info(f"Gemini request attempt {attempt} failed (status={(resp.status_code if resp is not None else 'no-response')}). Sleeping {sleep_for:.1f}s before retry.")
+        time.sleep(sleep_for)
+
+    return resp
 
 # Setup Database (MongoDB with Dict Fallback)
 db = None
@@ -68,7 +105,6 @@ def chat():
         payload = {
             "contents": formatted_contents,
             "systemInstruction": {
-                "role": "user",
                 "parts": [{"text": system_prompt}]
             },
             "generationConfig": {
@@ -76,14 +112,20 @@ def chat():
             }
         }
         
-        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
-        response = requests.post(api_url, headers={'Content-Type': 'application/json'}, json=payload, timeout=30)
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+        # Use a helper that implements retries with exponential backoff for 429/5xx responses
+        response = send_gemini_request(api_url, payload)
         
+        if response is None:
+            logger.error("Gemini API Error: no response returned from request")
+            return jsonify({"content": [{"text": "Sorry, there was an error communicating with Google Gemini. Status: no-response"}]}), 500
+
         if response.status_code != 200:
-            logger.error(f"Gemini API Error: {response.text}")
-            return jsonify({
-                "content": [{"text": f"Sorry, there was an error communicating with Google Gemini. Status: {response.status_code}"}]
-            }), 500
+            logger.error(f"Gemini API Error: {response.status_code} {response.text}")
+            # Propagate the actual Gemini status code (e.g., 429) to the client
+            status_code = response.status_code
+            # Return the textual message in the JSON body for the UI
+            return jsonify({"content": [{"text": f"Sorry, there was an error communicating with Google Gemini. Status: {status_code}"}]}), status_code
             
         data = response.json()
         model_text = data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', 'No response.')
@@ -154,7 +196,6 @@ def get_opportunities():
         payload = {
             "contents": formatted_contents,
             "systemInstruction": {
-                "role": "user",
                 "parts": [{"text": system_prompt}]
             },
             "generationConfig": {
@@ -162,12 +203,16 @@ def get_opportunities():
             }
         }
         
-        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
-        response = requests.post(api_url, headers={'Content-Type': 'application/json'}, json=payload, timeout=30)
-        
-        if response.status_code != 200:
-            logger.error(f"Gemini API Error: {response.text}")
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+        response = send_gemini_request(api_url, payload)
+
+        if response is None:
+            logger.error("Gemini API Error: no response returned from request")
             return jsonify({"error": "Failed to get response from AI"}), 500
+
+        if response.status_code != 200:
+            logger.error(f"Gemini API Error: {response.status_code} {response.text}")
+            return jsonify({"error": f"Failed to get response from AI. Status: {response.status_code}"}), response.status_code
             
         data = response.json()
         model_text = data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '[]')
